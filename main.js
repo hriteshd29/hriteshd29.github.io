@@ -1,5 +1,8 @@
 let c =document.getElementById("my-canvas")
 let ctx = c.getContext("2d")
+ctx.canvas.width = window.innerWidth;
+ctx.canvas.height = window.innerHeight/2;
+
 
 let loadImage = (src, callback) => {
     let img = document.createElement('img')
@@ -43,11 +46,19 @@ let loadImages = (callback) =>{         //callback will be called when all image
     })
 }
 
+let position=0
 let animate = (ctx, images,animation, callback)=>{
+
     images[animation].forEach((image, index)=>{
         setTimeout(()=>{
-            ctx.clearRect(0, 0, 500, 500)       //clear canvas before drawing other image
-            ctx.drawImage(image, 0, 0, 500, 500)
+            if(animation === "forward" && position <= ctx.canvas.width/2){
+                position = position+ 10
+            }else if(animation === "backward" && position >= 20){
+                position = position - 10
+            }
+
+            ctx.clearRect(position, 0, ctx.canvas.width/2, ctx.canvas.height)       //clear canvas before drawing other image
+            ctx.drawImage(image, position, 0, ctx.canvas.width/2, ctx.canvas.height)
         }, index *100)
     })
     setTimeout(callback, images[animation].length * 100)
